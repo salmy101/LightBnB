@@ -230,10 +230,80 @@ exports.getAllProperties = getAllProperties;
  * @param {{}} property An object containing all of the property details.
  * @return {Promise<{}>} A promise to the property.
  */
-const addProperty = function(property) {
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
-}
+// const addProperty = function(property) {
+//   const propertyId = Object.keys(properties).length + 1;
+//   property.id = propertyId;
+//   properties[propertyId] = property;
+//   return Promise.resolve(property);
+// }
+
+
+const addProperty = (properties) => {
+  console.log(properties);
+  // id SERIAL PRIMARY KEY NOT NULL,
+  // owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+  // title VARCHAR(255) NOT NULL,
+  // description TEXT,
+  // thumbnail_photo_url VARCHAR(255) NOT NULL,
+  // cover_photo_url VARCHAR(255) NOT NULL,
+  // cost_per_night INTEGER  NOT NULL DEFAULT 0,
+  // parking_spaces INTEGER  NOT NULL DEFAULT 0,
+  // number_of_bathrooms INTEGER  NOT NULL DEFAULT 0,
+  // number_of_bedrooms INTEGER  NOT NULL DEFAULT 0,
+  // country VARCHAR(255) NOT NULL,
+  // street VARCHAR(255) NOT NULL,
+  // city VARCHAR(255) NOT NULL,
+  // province VARCHAR(255) NOT NULL,
+  // post_code VARCHAR(255) NOT NULL,
+  // active BOOLEAN NOT NULL DEFAULT TRUE
+  return pool
+    .query(`
+    INSERT INTO properties (
+      owner_id, 
+      title,
+       description, 
+       thumbnail_photo_url, 
+       cover_photo_url, 
+       cost_per_night, 
+       parking_spaces, 
+       number_of_bathrooms, 
+       number_of_bedrooms, 
+       country, 
+       street, 
+       city, 
+       province,
+       post_code)
+    VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)`, 
+    [
+    properties.owner_id, 
+    properties.title, 
+    properties.description, 
+    properties.thumbnail_photo_url, 
+    properties.cover_photo_url,
+    properties.cost_per_night, 
+    properties.parking_spaces, 
+    properties.number_of_bathrooms, 
+    properties.number_of_bedrooms,
+    properties.country,
+    properties.street, 
+    properties.city, 
+    properties.province, 
+    properties.post_code,
+    ])
+    .then((result) => {
+      console.log("-------", properties);
+      return result.rows;
+    })
+    .catch((err) => {
+      console.log(err.message);
+    });
+};
+
+
+
+
+
+
+
+
 exports.addProperty = addProperty;
